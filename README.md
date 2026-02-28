@@ -29,7 +29,7 @@ On every boot, it:
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/nvidia-flatpak-sync.git
+git clone https://github.com/demorgon989/nvidia-flatpak-sync.git
 cd nvidia-flatpak-sync
 chmod +x install.sh uninstall.sh nvidia-flatpak-sync.sh
 sudo ./install.sh
