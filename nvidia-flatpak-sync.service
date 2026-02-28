@@ -1,0 +1,15 @@
+[Unit]
+Description=Sync Flatpak NVIDIA runtime to match system NVIDIA driver
+After=network-online.target flatpak-system-helper.service
+Wants=network-online.target
+ConditionPathExists=/usr/bin/flatpak
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/nvidia-flatpak-sync.sh
+RemainAfterExit=no
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
