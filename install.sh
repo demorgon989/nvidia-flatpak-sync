@@ -30,6 +30,19 @@ if ! modinfo nvidia &> /dev/null; then
     exit 1
 fi
 
+# Install libdnf5-plugin-actions if not already installed
+if ! rpm -q libdnf5-plugin-actions &> /dev/null; then
+    echo -e "${YELLOW}Installing libdnf5-plugin-actions dependency...${NC}"
+    dnf install -y libdnf5-plugin-actions
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}ERROR: Failed to install libdnf5-plugin-actions${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✓ libdnf5-plugin-actions installed${NC}"
+else
+    echo -e "${GREEN}✓ libdnf5-plugin-actions already installed${NC}"
+fi
+
 # Check script files exist in current directory
 if [ ! -f "./nvidia-flatpak-sync.sh" ]; then
     echo -e "${RED}ERROR: nvidia-flatpak-sync.sh not found in current directory.${NC}"
@@ -43,6 +56,12 @@ if [ ! -f "./nvidia-flatpak-sync.service" ]; then
     exit 1
 fi
 
+if [ ! -f "./nvidia-flatpak-sync.actions" ]; then
+    echo -e "${RED}ERROR: nvidia-flatpak-sync.actions not found in current directory.${NC}"
+    echo "Make sure you are running this from inside the nvidia-flatpak-sync folder."
+    exit 1
+fi
+
 echo -e "${YELLOW}Installing script to /usr/local/bin/...${NC}"
 cp ./nvidia-flatpak-sync.sh /usr/local/bin/nvidia-flatpak-sync.sh
 chmod +x /usr/local/bin/nvidia-flatpak-sync.sh
@@ -51,6 +70,11 @@ echo -e "${GREEN}✓ Script installed${NC}"
 echo -e "${YELLOW}Installing systemd service...${NC}"
 cp ./nvidia-flatpak-sync.service /etc/systemd/system/nvidia-flatpak-sync.service
 echo -e "${GREEN}✓ Service installed${NC}"
+
+echo -e "${YELLOW}Installing DNF actions hook...${NC}"
+mkdir -p /etc/dnf/libdnf5-plugins/actions.d
+cp ./nvidia-flatpak-sync.actions /etc/dnf/libdnf5-plugins/actions.d/nvidia-flatpak-sync.actions
+echo -e "${GREEN}✓ DNF actions hook installed${NC}"
 
 echo -e "${YELLOW}Enabling service to run on every boot...${NC}"
 systemctl daemon-reload

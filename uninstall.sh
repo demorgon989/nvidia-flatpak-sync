@@ -23,6 +23,10 @@ systemctl stop nvidia-flatpak-sync.service 2>/dev/null
 systemctl disable nvidia-flatpak-sync.service 2>/dev/null
 echo -e "${GREEN}✓ Service stopped and disabled${NC}"
 
+echo -e "${YELLOW}Removing DNF actions hook...${NC}"
+rm -f /etc/dnf/libdnf5-plugins/actions.d/nvidia-flatpak-sync.actions
+echo -e "${GREEN}✓ DNF actions hook removed${NC}"
+
 echo -e "${YELLOW}Removing service file...${NC}"
 rm -f /etc/systemd/system/nvidia-flatpak-sync.service
 systemctl daemon-reload

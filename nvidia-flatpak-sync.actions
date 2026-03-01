@@ -1,0 +1,8 @@
+# nvidia-flatpak-sync.actions
+# Triggers flatpak NVIDIA runtime sync whenever an NVIDIA driver package
+# is installed or updated via DNF.
+# Requires: libdnf5-plugin-actions
+# Place in: /etc/dnf/libdnf5-plugins/actions.d/
+
+post_transaction:kmod-nvidia*:in::/usr/local/bin/nvidia-flatpak-sync.sh
+post_transaction:akmod-nvidia*:in::/usr/local/bin/nvidia-flatpak-sync.sh

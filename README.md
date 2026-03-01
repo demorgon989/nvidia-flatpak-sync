@@ -12,24 +12,25 @@ This happens because DNF and Flatpak are completely separate ecosystems — they
 
 ## What It Does
 
-On every boot, it:
-1. Detects your current system NVIDIA driver version
-2. Checks your installed Flatpak NVIDIA runtimes
-3. If there's a mismatch — installs the correct runtime and removes the old one automatically
-4. If everything matches — does nothing silently
-5. Logs all actions to `/var/log/nvidia-flatpak-sync.log`
+There are two layers of protection:
+
+**Layer 1 — DNF hook (primary fix):** Runs the sync automatically the moment DNF finishes installing or updating your NVIDIA driver. By the time you reboot, your Flatpak runtime is already updated and the error popup never appears.
+
+**Layer 2 — Systemd service (safety net):** Runs on every boot and cleans up any leftover mismatched runtimes in case the DNF hook ever missed something.
+
+Both layers log everything to `/var/log/nvidia-flatpak-sync.log`.
 
 ## Requirements
 
 - Fedora (tested on Fedora 43 KDE)
 - NVIDIA GPU with drivers installed via RPM Fusion
-- Flatpak installed
-- Flathub repository configured
+- Flatpak installed with Flathub configured
+- `libdnf5-plugin-actions` (installed automatically by install.sh)
 
 ## Installation
 
 ```bash
-git clone https://github.com/demorgon989/nvidia-flatpak-sync.git
+git clone https://github.com/YOUR_USERNAME/nvidia-flatpak-sync.git
 cd nvidia-flatpak-sync
 chmod +x install.sh uninstall.sh nvidia-flatpak-sync.sh
 sudo ./install.sh
